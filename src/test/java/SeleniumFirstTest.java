@@ -1,16 +1,19 @@
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import java.lang.Object;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.openqa.selenium.Alert;
 
 public class SeleniumFirstTest {
-    @Test
+
+    @Test(enabled=false)
     public void javascriptTest(){
         System.setProperty("webdriver.chrome.driver","C:\\WebDriver\\chromedriver.exe");
 
@@ -31,21 +34,28 @@ public class SeleniumFirstTest {
 
 
     @Test
-    public void startChromeWebDriver(){
-        System.setProperty("webdriver.chrome.driver","C:\\WebDriver\\chromedriver.exe");
-
-        WebDriver driver = new ChromeDriver();
+    public void startChromeWebDriver() throws MalformedURLException {
+        DesiredCapabilities cap = DesiredCapabilities.chrome();
+        cap.setVersion("");
+        cap.setPlatform(Platform.LINUX);
+        RemoteWebDriver driver;
+        driver = new RemoteWebDriver(new URL("http://192.168.99.100:4446/wd/hub"), cap);
         driver.navigate().to("http://www.google.com");
-        Assert.assertTrue(true);
+        driver.manage().window().maximize();
+        driver.navigate().to("http://www.google.com");
+        Assert.assertEquals("Google", driver.getTitle());
         driver.quit();
     }
 
     @Test
-    public void startFFWebDriver(){
-        System.setProperty("webdriver.gecko.driver","C:\\WebDriver\\geckodriver.exe");
-        WebDriver driver = new FirefoxDriver();
+    public void startFFWebDriver() throws MalformedURLException {
+        DesiredCapabilities cap = DesiredCapabilities.firefox();
+        cap.setVersion("");
+        cap.setPlatform(Platform.LINUX);
+        RemoteWebDriver driver;
+        driver = new RemoteWebDriver(new URL("http://192.168.99.100:4446/wd/hub"), cap);
         driver.navigate().to("http://www.google.com");
-        Assert.assertTrue(true);
+        Assert.assertEquals("Google", driver.getTitle());
         driver.quit();
     }
 
